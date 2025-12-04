@@ -45,6 +45,7 @@ async function triggerFrontendRebuild(collection: string, operation: string, doc
 
   try {
     console.log('🚀 Triggering frontend rebuild...');
+    console.log(`   Deploy Hook URL: ${deployHookUrl}`);
 
     const response = await fetch(deployHookUrl, {
       method: 'POST',
@@ -53,14 +54,22 @@ async function triggerFrontendRebuild(collection: string, operation: string, doc
       },
     });
 
+    console.log(`   Response Status: ${response.status} ${response.statusText}`);
+
+    const responseData = await response.json();
+    console.log(`   Response Data: ${JSON.stringify(responseData)}`);
+
     if (response.ok) {
       console.log('✅ Frontend rebuild triggered successfully!');
+      console.log(`   Deployment ID: ${responseData.result?.id || 'N/A'}`);
       console.log('   Your changes will be live in ~2-3 minutes');
     } else {
       console.error(`❌ Failed to trigger rebuild: ${response.status} ${response.statusText}`);
+      console.error(`   Error details: ${JSON.stringify(responseData)}`);
     }
   } catch (error: any) {
     console.error('❌ Error triggering rebuild:', error.message);
+    console.error(`   Error stack: ${error.stack}`);
   }
 
   console.log('━'.repeat(60));
