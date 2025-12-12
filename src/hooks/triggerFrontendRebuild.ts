@@ -35,37 +35,53 @@ async function triggerFrontendRebuild(collection: string, operation: string, doc
   console.log(`   Timestamp: ${new Date().toISOString()}`);
   console.log('━'.repeat(60));
 
-  // Get deploy hook URL from environment
-  const deployHookUrl = process.env.DEPLOY_HOOK_URL;
+  // Get GitHub credentials from environment
+  const githubToken = process.env.GITHUB_TOKEN;
+  const githubRepo = process.env.GITHUB_REPO || 'ShuffleSEO/hivconnect-frontend';
 
-  if (!deployHookUrl) {
-    console.log('⚠️  DEPLOY_HOOK_URL not configured - skipping rebuild');
+  if (!githubToken) {
+    console.log('⚠️  GITHUB_TOKEN not configured - skipping rebuild');
+    console.log('   Set GITHUB_TOKEN in wrangler.jsonc to enable auto-rebuild');
     return;
   }
 
   try {
-    console.log('🚀 Triggering frontend rebuild...');
-    console.log(`   Deploy Hook URL: ${deployHookUrl}`);
+    console.log('🚀 Triggering frontend rebuild via GitHub Actions...');
+    console.log(`   Repository: ${githubRepo}`);
+    console.log(`   Workflow: deploy-on-webhook.yml`);
 
-    const response = await fetch(deployHookUrl, {
+    // Trigger GitHub Actions workflow using repository_dispatch
+    const apiUrl = `https://api.github.com/repos/${githubRepo}/dispatches`;
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
+        'Authorization': `Bearer ${githubToken}`,
+        'Accept': 'application/vnd.github.v3+json',
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        event_type: 'deploy-frontend',
+        client_payload: {
+          collection,
+          operation,
+          docId,
+          timestamp: new Date().toISOString(),
+        },
+      }),
     });
 
     console.log(`   Response Status: ${response.status} ${response.statusText}`);
 
-    const responseData = await response.json() as any;
-    console.log(`   Response Data: ${JSON.stringify(responseData)}`);
-
-    if (response.ok) {
+    if (response.status === 204) {
       console.log('✅ Frontend rebuild triggered successfully!');
-      console.log(`   Deployment ID: ${responseData.result?.id || 'N/A'}`);
-      console.log('   Your changes will be live in ~2-3 minutes');
+      console.log('   GitHub Actions workflow started');
+      console.log('   Check: https://github.com/' + githubRepo + '/actions');
+      console.log('   Your changes will be live in ~3-4 minutes');
     } else {
+      const responseData = await response.text();
       console.error(`❌ Failed to trigger rebuild: ${response.status} ${response.statusText}`);
-      console.error(`   Error details: ${JSON.stringify(responseData)}`);
+      console.error(`   Error details: ${responseData}`);
     }
   } catch (error: any) {
     console.error('❌ Error triggering rebuild:', error.message);
