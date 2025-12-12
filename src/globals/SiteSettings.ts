@@ -30,6 +30,48 @@ export const SiteSettings: GlobalConfig = {
       },
     },
     {
+      name: 'navigation',
+      type: 'array',
+      label: 'Header Navigation',
+      admin: {
+        description: 'Main navigation menu items',
+      },
+      fields: [
+        {
+          name: 'label',
+          type: 'text',
+          required: true,
+          admin: {
+            description: 'Menu item text',
+          },
+        },
+        {
+          name: 'url',
+          type: 'text',
+          required: true,
+          admin: {
+            description: 'Link URL (e.g., /, /services, /about)',
+          },
+        },
+        {
+          name: 'openInNewTab',
+          type: 'checkbox',
+          defaultValue: false,
+          admin: {
+            description: 'Open link in new tab',
+          },
+        },
+        {
+          name: 'order',
+          type: 'number',
+          defaultValue: 0,
+          admin: {
+            description: 'Display order (0 = first, 1 = second, etc.)',
+          },
+        },
+      ],
+    },
+    {
       name: 'logo',
       type: 'upload',
       relationTo: 'media',
