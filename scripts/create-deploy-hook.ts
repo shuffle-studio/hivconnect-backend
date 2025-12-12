@@ -35,7 +35,7 @@ async function createDeployHook() {
         },
         body: JSON.stringify({
           name: 'PayloadCMS Content Update',
-          branch: 'production', // or 'main' depending on your setup
+          branch: 'main', // Match the actual git branch
         }),
       }
     );
