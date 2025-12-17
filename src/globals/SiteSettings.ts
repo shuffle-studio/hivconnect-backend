@@ -34,7 +34,7 @@ export const SiteSettings: GlobalConfig = {
       type: 'array',
       label: 'Header Navigation',
       admin: {
-        description: 'Main navigation menu items',
+        description: 'Main navigation menu items with optional dropdown children',
       },
       fields: [
         {
@@ -48,9 +48,8 @@ export const SiteSettings: GlobalConfig = {
         {
           name: 'url',
           type: 'text',
-          required: true,
           admin: {
-            description: 'Link URL (e.g., /, /services, /about)',
+            description: 'Link URL (leave empty if this item has dropdown children)',
           },
         },
         {
@@ -60,6 +59,48 @@ export const SiteSettings: GlobalConfig = {
           admin: {
             description: 'Open link in new tab',
           },
+        },
+        {
+          name: 'children',
+          type: 'array',
+          label: 'Dropdown Items',
+          admin: {
+            description: 'Child menu items (creates a dropdown menu)',
+          },
+          fields: [
+            {
+              name: 'label',
+              type: 'text',
+              required: true,
+              admin: {
+                description: 'Dropdown item text',
+              },
+            },
+            {
+              name: 'url',
+              type: 'text',
+              required: true,
+              admin: {
+                description: 'Link URL for this dropdown item',
+              },
+            },
+            {
+              name: 'openInNewTab',
+              type: 'checkbox',
+              defaultValue: false,
+              admin: {
+                description: 'Open link in new tab',
+              },
+            },
+            {
+              name: 'order',
+              type: 'number',
+              defaultValue: 0,
+              admin: {
+                description: 'Display order within dropdown',
+              },
+            },
+          ],
         },
         {
           name: 'order',
