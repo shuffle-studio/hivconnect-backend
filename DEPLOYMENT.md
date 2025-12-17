@@ -1,8 +1,59 @@
 # HIV Connect Central NJ Backend - Deployment Guide
 
-**Last Updated**: December 4, 2025
+**Last Updated**: December 17, 2025
 **Repository**: https://github.com/kevinshuffle/hivconnect-backend
 **CTO**: Kevin / Shuffle SEO
+
+---
+
+## 🚨 CRITICAL POLICY: PRODUCTION ONLY - NO STAGING
+
+**Per explicit client directive**: This project does NOT use staging environments.
+
+### ⚠️ DO NOT CREATE NEW DEPLOYMENTS
+
+**NEVER create**:
+- ❌ New Cloudflare Pages projects for HIV Connect
+- ❌ New Cloudflare Workers for HIV Connect
+- ❌ Staging/dev/test environments
+- ❌ Additional D1 databases or R2 buckets
+
+**There is ONLY ONE backend and ONE frontend**:
+- Backend: `hivconnect-backend-production` (Cloudflare Worker)
+- Frontend: `hivconnect-frontend` (Cloudflare Pages)
+
+**If you need to deploy**, ALWAYS use:
+```bash
+# Backend - PRODUCTION ONLY
+CLOUDFLARE_ENV=production pnpm run deploy:app
+
+# Frontend
+CLOUDFLARE_ACCOUNT_ID=77936f7f1fecd5df8504adaf96fad1fb npx wrangler pages deploy dist --project-name=hivconnect-frontend
+```
+
+### Historical Note: Two-Backend Mistake (FIXED December 17, 2025)
+
+**What Happened**: Accidentally created TWO workers:
+- `hivconnect-backend` (staging - 10 deployments) - **DELETED**
+- `hivconnect-backend-production` (production - 3 deployments) - **KEPT**
+
+**Root Cause**: Deploying without `CLOUDFLARE_ENV=production` created the staging worker.
+
+**Fix Applied**:
+1. Deleted `hivconnect-backend` worker completely
+2. Updated all config files to reference production worker only
+3. Standardized environment variables to `PUBLIC_PAYLOAD_URL`
+4. Created this documentation to prevent recurrence
+
+**Lesson**: ALWAYS include `CLOUDFLARE_ENV=production` when deploying backend.
+
+### Production URLs
+
+- **Backend API**: https://hivconnect-backend-production.shuffle-seo.workers.dev
+- **CMS Admin**: https://hivconnect-backend-production.shuffle-seo.workers.dev/admin
+- **Database**: Cloudflare D1 (`hivconnect-db-production`)
+- **Storage**: Cloudflare R2 (`hivconnect-media-production`)
+- **Frontend**: https://hivconnectcnj.org
 
 ---
 
@@ -22,7 +73,7 @@ git push origin main
 # 1. Runs tests
 # 2. Builds with OpenNext
 # 3. Deploys to Cloudflare Workers
-# 4. Available at: https://hivconnect-backend.shuffle-seo.workers.dev
+# 4. Available at: https://hivconnect-backend-production.shuffle-seo.workers.dev
 ```
 
 **Deployment Time**: 2-3 minutes
@@ -191,8 +242,8 @@ curl -X POST "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/3
 ```jsonc
 {
   "vars": {
-    "PAYLOAD_PUBLIC_SERVER_URL": "https://hivconnect-backend.shuffle-seo.workers.dev",
-    "DEPLOY_HOOK_URL": "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/3e240bd9-fb8e-4972-b69a-32436151cfba",
+    "PAYLOAD_PUBLIC_SERVER_URL": "https://hivconnect-backend-production.shuffle-seo.workers.dev",
+    "DEPLOY_HOOK_URL": "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/2282d760-7d13-4023-bc61-9b85b707f129",
     "PAYLOAD_SECRET": "N3DHalBhL4HWguvVag6xbyEugcS/Ovstd/PmQCymkPA="
   }
 }
@@ -265,7 +316,7 @@ jobs:
       - name: Deployment summary
         run: |
           echo "✅ Backend deployed successfully to Cloudflare Workers"
-          echo "🔗 URL: https://hivconnect-backend.shuffle-seo.workers.dev"
+          echo "🔗 URL: https://hivconnect-backend-production.shuffle-seo.workers.dev"
 ```
 
 ### Workflow Triggers
@@ -345,7 +396,7 @@ gh run view <run-id> --log
 
 **Check Worker logs**:
 ```bash
-npx wrangler tail hivconnect-backend --format pretty
+npx wrangler tail hivconnect-backend-production --format pretty
 ```
 
 **Look for**:
@@ -422,20 +473,20 @@ pnpm payload migrate
 
 ```bash
 # View all logs
-npx wrangler tail hivconnect-backend --format pretty
+npx wrangler tail hivconnect-backend-production --format pretty
 
 # Filter for errors only
-npx wrangler tail hivconnect-backend --format pretty | grep ERROR
+npx wrangler tail hivconnect-backend-production --format pretty | grep ERROR
 
 # Filter for webhook activity
-npx wrangler tail hivconnect-backend --format pretty | grep "CONTENT CHANGE"
+npx wrangler tail hivconnect-backend-production --format pretty | grep "CONTENT CHANGE"
 ```
 
 ### Check API Health
 
 ```bash
 # Test API is responding
-curl https://hivconnect-backend.shuffle-seo.workers.dev/api/providers
+curl https://hivconnect-backend-production.shuffle-seo.workers.dev/api/providers
 
 # Should return:
 # {"docs":[...],"totalDocs":17,...}
@@ -443,7 +494,7 @@ curl https://hivconnect-backend.shuffle-seo.workers.dev/api/providers
 
 ### Admin UI Access
 
-**URL**: https://hivconnect-backend.shuffle-seo.workers.dev/admin
+**URL**: https://hivconnect-backend-production.shuffle-seo.workers.dev/admin
 
 **Credentials**: Set during initial setup
 
