@@ -243,7 +243,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/3
 {
   "vars": {
     "PAYLOAD_PUBLIC_SERVER_URL": "https://hivconnect-backend-production.shuffle-seo.workers.dev",
-    "DEPLOY_HOOK_URL": "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/2282d760-7d13-4023-bc61-9b85b707f129",
+    "DEPLOY_HOOK_URL": "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/60788d5a-a22a-4bcf-a427-bdba665710d9",
     "PAYLOAD_SECRET": "N3DHalBhL4HWguvVag6xbyEugcS/Ovstd/PmQCymkPA="
   }
 }

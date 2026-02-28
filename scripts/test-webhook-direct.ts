@@ -3,7 +3,7 @@
  * This simulates what happens when PayloadCMS triggers the webhook
  */
 
-const DEPLOY_HOOK_URL = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/83909058-e882-45f4-8283-ed92dd8ecae5';
+const DEPLOY_HOOK_URL = 'https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/60788d5a-a22a-4bcf-a427-bdba665710d9';
 
 async function testWebhook() {
   console.log('🧪 Testing Deploy Hook Webhook\n');
