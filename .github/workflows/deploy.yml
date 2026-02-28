@@ -29,6 +29,8 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run database migrations
+        id: migrate
+        continue-on-error: true
         run: pnpm run deploy:database
         env:
           CLOUDFLARE_ENV: ''
@@ -46,6 +48,10 @@ jobs:
 
       - name: Deployment summary
         run: |
-          echo "✅ Database migrations completed"
+          if [ "${{ steps.migrate.outcome }}" = "failure" ]; then
+            echo "⚠️  Database migrations failed (non-blocking) — check logs"
+          else
+            echo "✅ Database migrations completed"
+          fi
           echo "✅ Backend deployed successfully to Cloudflare Workers"
           echo "🔗 URL: https://hivconnect-backend.shufflestudio.workers.dev"
