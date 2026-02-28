@@ -48,4 +48,4 @@ jobs:
         run: |
           echo "✅ Database migrations completed"
           echo "✅ Backend deployed successfully to Cloudflare Workers"
-          echo "🔗 URL: https://hivconnect-backend-production.shuffle-seo.workers.dev"
+          echo "🔗 URL: https://hivconnect-backend.shufflestudio.workers.dev"
