@@ -55,15 +55,17 @@ export default buildConfig({
   cors: [
     process.env.CORS_ORIGINS?.split(',') || [
       'http://localhost:4321',
+      'https://hivconnectcentralnj.com',
       'https://hivconnectcnj.org',
-      'https://*.hivconnect-frontend.pages.dev', // Cloudflare Pages preview deployments
+      'https://login.hivconnectcentralnj.com',
     ],
   ].flat(),
   csrf: [
     process.env.CORS_ORIGINS?.split(',') || [
       'http://localhost:4321',
+      'https://hivconnectcentralnj.com',
       'https://hivconnectcnj.org',
-      'https://*.hivconnect-frontend.pages.dev', // Cloudflare Pages preview deployments
+      'https://login.hivconnectcentralnj.com',
     ],
   ].flat(),
   typescript: {

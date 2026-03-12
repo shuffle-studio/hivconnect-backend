@@ -52,7 +52,7 @@ export default async function HomePage() {
             <p>View the live HIV Connect Central NJ website</p>
             <a
               className="btn-secondary"
-              href="https://hivconnect-frontend-7un.pages.dev"
+              href="https://hivconnectcentralnj.com"
               target="_blank"
               rel="noopener noreferrer"
             >
