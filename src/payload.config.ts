@@ -78,7 +78,12 @@ export default buildConfig({
     // storage-adapter-placeholder
     r2Storage({
       bucket: cloudflare.env.R2,
-      collections: { media: true },
+      collections: {
+        media: {
+          generateFileURL: ({ filename }) =>
+            `${process.env.PAYLOAD_PUBLIC_SERVER_URL || 'https://login.hivconnectcentralnj.com'}/api/media/file/${filename}`,
+        },
+      },
     }),
   ],
 })
