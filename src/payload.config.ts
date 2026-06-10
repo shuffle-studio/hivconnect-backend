@@ -18,6 +18,7 @@ import { Tags } from './collections/Tags'
 import { FAQs } from './collections/FAQs'
 import { Pages } from './collections/Pages'
 import { MembershipApplications } from './collections/MembershipApplications'
+import { ContactSubmissions } from './collections/ContactSubmissions'
 import { Events } from './collections/Events'
 import { Bylaws } from './collections/Bylaws'
 import { ServiceStandards } from './collections/ServiceStandards'
@@ -44,7 +45,7 @@ export default buildConfig({
       titleSuffix: '- HIV Connect Central NJ',
     },
   },
-  collections: [Users, Providers, Resources, Blog, PDFLibrary, Tags, FAQs, Pages, MembershipApplications, Events, Bylaws, ServiceStandards, Media],
+  collections: [Users, Providers, Resources, Blog, PDFLibrary, Tags, FAQs, Pages, MembershipApplications, ContactSubmissions, Events, Bylaws, ServiceStandards, Media],
   globals: [SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

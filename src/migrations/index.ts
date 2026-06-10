@@ -6,6 +6,7 @@ import * as migration_20251211_143325_add_events_collection from './20251211_143
 import * as migration_20251211_152317_add_event_coordinates from './20251211_152317_add_event_coordinates';
 import * as migration_20251212_172450 from './20251212_172450';
 import * as migration_20251217_193451_add_bylaws_service_standards from './20251217_193451_add_bylaws_service_standards';
+import * as migration_20260610_185942_add_contact_and_expand_membership from './20260610_185942_add_contact_and_expand_membership';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20251217_193451_add_bylaws_service_standards.up,
     down: migration_20251217_193451_add_bylaws_service_standards.down,
-    name: '20251217_193451_add_bylaws_service_standards'
+    name: '20251217_193451_add_bylaws_service_standards',
+  },
+  {
+    up: migration_20260610_185942_add_contact_and_expand_membership.up,
+    down: migration_20260610_185942_add_contact_and_expand_membership.down,
+    name: '20260610_185942_add_contact_and_expand_membership'
   },
 ];

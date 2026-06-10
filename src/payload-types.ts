@@ -76,10 +76,10 @@ export interface Config {
     faqs: Faq;
     pages: Page;
     'membership-applications': MembershipApplication;
+    'contact-submissions': ContactSubmission;
     events: Event;
-    services: Service;
-    'case-studies': CaseStudy;
-    'team-members': TeamMember;
+    bylaws: Bylaw;
+    'service-standards': ServiceStandard;
     media: Media;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -97,10 +97,10 @@ export interface Config {
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     'membership-applications': MembershipApplicationsSelect<false> | MembershipApplicationsSelect<true>;
+    'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
-    services: ServicesSelect<false> | ServicesSelect<true>;
-    'case-studies': CaseStudiesSelect<false> | CaseStudiesSelect<true>;
-    'team-members': TeamMembersSelect<false> | TeamMembersSelect<true>;
+    bylaws: BylawsSelect<false> | BylawsSelect<true>;
+    'service-standards': ServiceStandardsSelect<false> | ServiceStandardsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -502,9 +502,9 @@ export interface Page {
    */
   slug: string;
   /**
-   * Main page content (use this OR Layout blocks below)
+   * Main page content
    */
-  content?: {
+  content: {
     root: {
       type: string;
       children: {
@@ -518,216 +518,7 @@ export interface Page {
       version: number;
     };
     [k: string]: unknown;
-  } | null;
-  /**
-   * Build flexible layouts with blocks. Leave empty to use Rich Text instead.
-   */
-  layout?:
-    | (
-        | {
-            /**
-             * Main hero headline
-             */
-            title: string;
-            /**
-             * Supporting text below the headline
-             */
-            subtitle?: string | null;
-            /**
-             * Hero background image (optional)
-             */
-            backgroundImage?: (number | null) | Media;
-            /**
-             * Call-to-action button (optional)
-             */
-            ctaButton?: {
-              /**
-               * Button text (e.g., "Get Started")
-               */
-              text?: string | null;
-              /**
-               * Button destination URL
-               */
-              url?: string | null;
-              style?: ('primary' | 'secondary' | 'outline') | null;
-            };
-            /**
-             * Text alignment
-             */
-            alignment?: ('left' | 'center' | 'right') | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'hero';
-          }
-        | {
-            /**
-             * Section heading (optional)
-             */
-            heading?: string | null;
-            /**
-             * Text content for this section
-             */
-            content: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            };
-            /**
-             * Text alignment
-             */
-            alignment?: ('left' | 'center' | 'right') | null;
-            /**
-             * Section background color
-             */
-            backgroundColor?: ('white' | 'gray' | 'primary') | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'textSection';
-          }
-        | {
-            /**
-             * CTA heading
-             */
-            heading: string;
-            /**
-             * Supporting description text
-             */
-            description?: string | null;
-            /**
-             * Primary action button
-             */
-            primaryButton: {
-              /**
-               * Button text
-               */
-              text: string;
-              /**
-               * Button destination URL
-               */
-              url: string;
-            };
-            /**
-             * Secondary action button (optional)
-             */
-            secondaryButton?: {
-              /**
-               * Button text
-               */
-              text?: string | null;
-              /**
-               * Button destination URL
-               */
-              url?: string | null;
-            };
-            /**
-             * CTA section background color
-             */
-            backgroundColor?: ('primary' | 'secondary' | 'gray') | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'cta';
-          }
-        | {
-            /**
-             * Section heading
-             */
-            heading?: string | null;
-            /**
-             * Section description
-             */
-            description?: string | null;
-            /**
-             * How to select which services to display
-             */
-            displayMode: 'auto' | 'manual';
-            /**
-             * Manually select specific services to display
-             */
-            selectedServices?: (number | Service)[] | null;
-            /**
-             * Layout style for service cards
-             */
-            layout?: ('grid-3' | 'grid-2' | 'list') | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'serviceCards';
-          }
-        | {
-            /**
-             * Section heading
-             */
-            heading?: string | null;
-            /**
-             * How to select which case studies to display
-             */
-            displayMode: 'featured' | 'all' | 'manual' | 'category';
-            /**
-             * Manually select specific case studies
-             */
-            selectedCaseStudies?: (number | CaseStudy)[] | null;
-            /**
-             * Filter by category
-             */
-            category?:
-              | (
-                  | 'platform-build'
-                  | 'migration'
-                  | 'optimization'
-                  | 'redesign'
-                  | 'ecommerce'
-                  | 'healthcare'
-                  | 'nonprofit'
-                )
-              | null;
-            /**
-             * Maximum number of case studies to show
-             */
-            limit?: number | null;
-            /**
-             * Layout style for case study cards
-             */
-            layout?: ('grid-3' | 'grid-2' | 'list') | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'caseStudyShowcase';
-          }
-        | {
-            /**
-             * Section heading
-             */
-            heading?: string | null;
-            /**
-             * Section description
-             */
-            description?: string | null;
-            /**
-             * How to select which team members to display
-             */
-            displayMode: 'all' | 'manual';
-            /**
-             * Manually select specific team members
-             */
-            selectedMembers?: (number | TeamMember)[] | null;
-            /**
-             * Layout style for team member cards
-             */
-            layout?: ('grid-4' | 'grid-3' | 'grid-2') | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'teamGrid';
-          }
-      )[]
-    | null;
+  };
   /**
    * Short description for SEO meta description (150-160 characters)
    */
@@ -760,302 +551,6 @@ export interface Page {
   createdAt: string;
 }
 /**
- * Three-tier service offerings for Shuffle Studio website
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services".
- */
-export interface Service {
-  id: number;
-  /**
-   * Service tier name (e.g., "Entry", "Growth", "Platform")
-   */
-  name: string;
-  /**
-   * URL-friendly version of the name
-   */
-  slug: string;
-  /**
-   * Service tier level
-   */
-  tier: 'entry' | 'growth' | 'platform';
-  /**
-   * Short tagline for the service (e.g., "Fix the broken site")
-   */
-  tagline: string;
-  /**
-   * Detailed description of what this service tier includes
-   */
-  description: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * Build/setup price range (e.g., "$5,000 - $15,000")
-   */
-  buildPrice: string;
-  /**
-   * Monthly retainer price (e.g., "$500/month")
-   */
-  monthlyPrice: string;
-  /**
-   * List of features included in this tier
-   */
-  features: {
-    feature: string;
-    id?: string | null;
-  }[];
-  /**
-   * Who this service tier is best suited for
-   */
-  bestFor: string;
-  /**
-   * Display order (0 = first, 1 = second, etc.)
-   */
-  order: number;
-  /**
-   * Highlight this service tier on the website
-   */
-  featured?: boolean | null;
-  status: 'draft' | 'published' | 'archived';
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Portfolio and project showcase for Shuffle Studio website
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "case-studies".
- */
-export interface CaseStudy {
-  id: number;
-  /**
-   * Case study title
-   */
-  title: string;
-  /**
-   * URL-friendly version of the title
-   */
-  slug: string;
-  /**
-   * Client or project name
-   */
-  clientName: string;
-  /**
-   * Project categories (can select multiple)
-   */
-  category: ('platform-build' | 'migration' | 'optimization' | 'redesign' | 'ecommerce' | 'healthcare' | 'nonprofit')[];
-  /**
-   * Short summary for card/preview (2-3 sentences)
-   */
-  excerpt: string;
-  /**
-   * Full case study content
-   */
-  description: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * Client challenge or problem to solve
-   */
-  challenge?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * How Shuffle Studio solved the problem
-   */
-  solution?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  /**
-   * Measurable results and outcomes
-   */
-  results?:
-    | {
-        /**
-         * Result metric (e.g., "50% faster load times")
-         */
-        metric: string;
-        /**
-         * Details about this result
-         */
-        description?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Technologies and tools used (e.g., "Next.js", "PayloadCMS", "Cloudflare")
-   */
-  technologies?:
-    | {
-        technology: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Main case study image
-   */
-  featuredImage: number | Media;
-  /**
-   * Additional project screenshots or images
-   */
-  galleryImages?:
-    | {
-        image: number | Media;
-        caption?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Live project URL (optional)
-   */
-  projectUrl?: string | null;
-  /**
-   * Client testimonial (optional)
-   */
-  testimonial?: {
-    /**
-     * Client testimonial quote
-     */
-    quote?: string | null;
-    /**
-     * Testimonial author name
-     */
-    author?: string | null;
-    /**
-     * Author role/title
-     */
-    role?: string | null;
-  };
-  /**
-   * Highlight this case study on the website
-   */
-  featured?: boolean | null;
-  /**
-   * Display order (0 = first, 1 = second, etc.)
-   */
-  order?: number | null;
-  /**
-   * Case study publication date
-   */
-  publishedDate: string;
-  status: 'draft' | 'published' | 'archived';
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Team member profiles for Shuffle Studio About page
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "team-members".
- */
-export interface TeamMember {
-  id: number;
-  /**
-   * Team member full name
-   */
-  name: string;
-  /**
-   * URL-friendly version of the name
-   */
-  slug: string;
-  /**
-   * Job title or role (e.g., "CTO & Co-Founder")
-   */
-  role: string;
-  /**
-   * Team member biography
-   */
-  bio: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
-  /**
-   * Professional headshot or profile photo
-   */
-  photo: number | Media;
-  /**
-   * Work email address (optional, shown publicly if provided)
-   */
-  email?: string | null;
-  /**
-   * LinkedIn profile URL
-   */
-  linkedIn?: string | null;
-  /**
-   * Twitter/X handle or URL
-   */
-  twitter?: string | null;
-  /**
-   * Display order (0 = first, 1 = second, etc.)
-   */
-  order: number;
-  /**
-   * Show this team member on the website
-   */
-  active?: boolean | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * Planning Council membership applications with status tracking
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1067,19 +562,107 @@ export interface MembershipApplication {
   status?: ('pending' | 'reviewing' | 'approved' | 'rejected') | null;
   firstName: string;
   lastName: string;
+  birthMonth?: string | null;
+  birthDay?: string | null;
+  birthYear?: string | null;
   email: string;
   confirmEmail: string;
+  /**
+   * Primary phone (auto-filled from cell or home)
+   */
   phone?: string | null;
+  homePhone?: string | null;
+  cellPhone?: string | null;
+  bestTimeToCall?: string | null;
   streetAddress: string;
+  addressLine2?: string | null;
   city: string;
   state: string;
   zipCode: string;
+  country?: string | null;
+  isEmployed?: boolean | null;
+  employers?: string | null;
+  jobTitle?: string | null;
+  companyAddress?: string | null;
+  companyAddressLine2?: string | null;
+  companyCity?: string | null;
+  companyState?: string | null;
+  companyZipCode?: string | null;
+  receivedRyanWhiteServices?: boolean | null;
+  gender?: string | null;
+  age?: string | null;
+  raceEthnicity?: string | null;
+  mailingLists?:
+    | {
+        list?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  languages?:
+    | {
+        language?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  diverseExperience?:
+    | {
+        experience?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  serviceProviders?:
+    | {
+        provider?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  needsAssistance?: boolean | null;
+  assistanceDescription?: string | null;
   whyJoin: string;
   hivExperience: string;
+  backgroundExperience?: string | null;
+  eligibilityInfo?: string | null;
+  membershipCategories?:
+    | {
+        category?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  experienceInterests?:
+    | {
+        interest?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   agreedToCommitments: boolean;
   consentGiven: boolean;
   /**
    * Internal notes for reviewing application
+   */
+  adminNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Contact form messages from the public website
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-submissions".
+ */
+export interface ContactSubmission {
+  id: number;
+  fullName?: string | null;
+  status?: ('new' | 'in-progress' | 'resolved') | null;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string | null;
+  county?: ('middlesex' | 'somerset' | 'hunterdon' | 'other') | null;
+  inquiryType: 'services' | 'testing' | 'treatment' | 'support' | 'planning-council' | 'other';
+  message: string;
+  consentGiven: boolean;
+  /**
+   * Internal notes for handling this inquiry
    */
   adminNotes?: string | null;
   updatedAt: string;
@@ -1167,6 +750,86 @@ export interface Event {
   createdAt: string;
 }
 /**
+ * Planning Council Bylaws and organizational documents
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "bylaws".
+ */
+export interface Bylaw {
+  id: number;
+  /**
+   * Bylaws document title (e.g., "Planning Council Bylaws")
+   */
+  title: string;
+  /**
+   * URL-friendly identifier (auto-generated from title)
+   */
+  slug: string;
+  /**
+   * Upload the bylaws PDF document
+   */
+  document: number | Media;
+  /**
+   * Document version (e.g., "2024 Revision", "Version 3.0")
+   */
+  version?: string | null;
+  /**
+   * Date when these bylaws became effective
+   */
+  effectiveDate: string;
+  /**
+   * Brief description of the document or changes in this version
+   */
+  description?: string | null;
+  /**
+   * Mark as the current/active version of bylaws
+   */
+  isCurrent?: boolean | null;
+  status: 'draft' | 'published' | 'archived';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Ryan White Service Standards and quality guidelines
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-standards".
+ */
+export interface ServiceStandard {
+  id: number;
+  /**
+   * Service standard title (e.g., "Core Medical Services Standards")
+   */
+  title: string;
+  /**
+   * URL-friendly identifier (auto-generated from title)
+   */
+  slug: string;
+  /**
+   * Upload the service standards PDF document
+   */
+  document: number | Media;
+  /**
+   * Category of service standard
+   */
+  category: 'core' | 'service-delivery' | 'quality' | 'medical' | 'support' | 'prevention' | 'other';
+  /**
+   * Brief description of what this standard covers
+   */
+  description?: string | null;
+  /**
+   * Display order (lower numbers appear first)
+   */
+  order?: number | null;
+  /**
+   * Date when this standard was last updated
+   */
+  lastUpdated: string;
+  status: 'draft' | 'published' | 'archived';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -1227,20 +890,20 @@ export interface PayloadLockedDocument {
         value: number | MembershipApplication;
       } | null)
     | ({
+        relationTo: 'contact-submissions';
+        value: number | ContactSubmission;
+      } | null)
+    | ({
         relationTo: 'events';
         value: number | Event;
       } | null)
     | ({
-        relationTo: 'services';
-        value: number | Service;
+        relationTo: 'bylaws';
+        value: number | Bylaw;
       } | null)
     | ({
-        relationTo: 'case-studies';
-        value: number | CaseStudy;
-      } | null)
-    | ({
-        relationTo: 'team-members';
-        value: number | TeamMember;
+        relationTo: 'service-standards';
+        value: number | ServiceStandard;
       } | null)
     | ({
         relationTo: 'media';
@@ -1497,92 +1160,6 @@ export interface PagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   content?: T;
-  layout?:
-    | T
-    | {
-        hero?:
-          | T
-          | {
-              title?: T;
-              subtitle?: T;
-              backgroundImage?: T;
-              ctaButton?:
-                | T
-                | {
-                    text?: T;
-                    url?: T;
-                    style?: T;
-                  };
-              alignment?: T;
-              id?: T;
-              blockName?: T;
-            };
-        textSection?:
-          | T
-          | {
-              heading?: T;
-              content?: T;
-              alignment?: T;
-              backgroundColor?: T;
-              id?: T;
-              blockName?: T;
-            };
-        cta?:
-          | T
-          | {
-              heading?: T;
-              description?: T;
-              primaryButton?:
-                | T
-                | {
-                    text?: T;
-                    url?: T;
-                  };
-              secondaryButton?:
-                | T
-                | {
-                    text?: T;
-                    url?: T;
-                  };
-              backgroundColor?: T;
-              id?: T;
-              blockName?: T;
-            };
-        serviceCards?:
-          | T
-          | {
-              heading?: T;
-              description?: T;
-              displayMode?: T;
-              selectedServices?: T;
-              layout?: T;
-              id?: T;
-              blockName?: T;
-            };
-        caseStudyShowcase?:
-          | T
-          | {
-              heading?: T;
-              displayMode?: T;
-              selectedCaseStudies?: T;
-              category?: T;
-              limit?: T;
-              layout?: T;
-              id?: T;
-              blockName?: T;
-            };
-        teamGrid?:
-          | T
-          | {
-              heading?: T;
-              description?: T;
-              displayMode?: T;
-              selectedMembers?: T;
-              layout?: T;
-              id?: T;
-              blockName?: T;
-            };
-      };
   excerpt?: T;
   meta?:
     | T
@@ -1607,16 +1184,95 @@ export interface MembershipApplicationsSelect<T extends boolean = true> {
   status?: T;
   firstName?: T;
   lastName?: T;
+  birthMonth?: T;
+  birthDay?: T;
+  birthYear?: T;
   email?: T;
   confirmEmail?: T;
   phone?: T;
+  homePhone?: T;
+  cellPhone?: T;
+  bestTimeToCall?: T;
   streetAddress?: T;
+  addressLine2?: T;
   city?: T;
   state?: T;
   zipCode?: T;
+  country?: T;
+  isEmployed?: T;
+  employers?: T;
+  jobTitle?: T;
+  companyAddress?: T;
+  companyAddressLine2?: T;
+  companyCity?: T;
+  companyState?: T;
+  companyZipCode?: T;
+  receivedRyanWhiteServices?: T;
+  gender?: T;
+  age?: T;
+  raceEthnicity?: T;
+  mailingLists?:
+    | T
+    | {
+        list?: T;
+        id?: T;
+      };
+  languages?:
+    | T
+    | {
+        language?: T;
+        id?: T;
+      };
+  diverseExperience?:
+    | T
+    | {
+        experience?: T;
+        id?: T;
+      };
+  serviceProviders?:
+    | T
+    | {
+        provider?: T;
+        id?: T;
+      };
+  needsAssistance?: T;
+  assistanceDescription?: T;
   whyJoin?: T;
   hivExperience?: T;
+  backgroundExperience?: T;
+  eligibilityInfo?: T;
+  membershipCategories?:
+    | T
+    | {
+        category?: T;
+        id?: T;
+      };
+  experienceInterests?:
+    | T
+    | {
+        interest?: T;
+        id?: T;
+      };
   agreedToCommitments?: T;
+  consentGiven?: T;
+  adminNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-submissions_select".
+ */
+export interface ContactSubmissionsSelect<T extends boolean = true> {
+  fullName?: T;
+  status?: T;
+  firstName?: T;
+  lastName?: T;
+  email?: T;
+  phone?: T;
+  county?: T;
+  inquiryType?: T;
+  message?: T;
   consentGiven?: T;
   adminNotes?: T;
   updatedAt?: T;
@@ -1662,93 +1318,33 @@ export interface EventsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "services_select".
+ * via the `definition` "bylaws_select".
  */
-export interface ServicesSelect<T extends boolean = true> {
-  name?: T;
-  slug?: T;
-  tier?: T;
-  tagline?: T;
-  description?: T;
-  buildPrice?: T;
-  monthlyPrice?: T;
-  features?:
-    | T
-    | {
-        feature?: T;
-        id?: T;
-      };
-  bestFor?: T;
-  order?: T;
-  featured?: T;
-  status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "case-studies_select".
- */
-export interface CaseStudiesSelect<T extends boolean = true> {
+export interface BylawsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
-  clientName?: T;
-  category?: T;
-  excerpt?: T;
+  document?: T;
+  version?: T;
+  effectiveDate?: T;
   description?: T;
-  challenge?: T;
-  solution?: T;
-  results?:
-    | T
-    | {
-        metric?: T;
-        description?: T;
-        id?: T;
-      };
-  technologies?:
-    | T
-    | {
-        technology?: T;
-        id?: T;
-      };
-  featuredImage?: T;
-  galleryImages?:
-    | T
-    | {
-        image?: T;
-        caption?: T;
-        id?: T;
-      };
-  projectUrl?: T;
-  testimonial?:
-    | T
-    | {
-        quote?: T;
-        author?: T;
-        role?: T;
-      };
-  featured?: T;
-  order?: T;
-  publishedDate?: T;
+  isCurrent?: T;
   status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "team-members_select".
+ * via the `definition` "service-standards_select".
  */
-export interface TeamMembersSelect<T extends boolean = true> {
-  name?: T;
+export interface ServiceStandardsSelect<T extends boolean = true> {
+  title?: T;
   slug?: T;
-  role?: T;
-  bio?: T;
-  photo?: T;
-  email?: T;
-  linkedIn?: T;
-  twitter?: T;
+  document?: T;
+  category?: T;
+  description?: T;
   order?: T;
-  active?: T;
+  lastUpdated?: T;
+  status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1822,7 +1418,7 @@ export interface SiteSetting {
    */
   hotlineNumber: string;
   /**
-   * Main navigation menu items
+   * Main navigation menu items with optional dropdown children
    */
   navigation?:
     | {
@@ -1831,13 +1427,37 @@ export interface SiteSetting {
          */
         label: string;
         /**
-         * Link URL (e.g., /, /services, /about)
+         * Link URL (leave empty if this item has dropdown children)
          */
-        url: string;
+        url?: string | null;
         /**
          * Open link in new tab
          */
         openInNewTab?: boolean | null;
+        /**
+         * Child menu items (creates a dropdown menu)
+         */
+        children?:
+          | {
+              /**
+               * Dropdown item text
+               */
+              label: string;
+              /**
+               * Link URL for this dropdown item
+               */
+              url: string;
+              /**
+               * Open link in new tab
+               */
+              openInNewTab?: boolean | null;
+              /**
+               * Display order within dropdown
+               */
+              order?: number | null;
+              id?: string | null;
+            }[]
+          | null;
         /**
          * Display order (0 = first, 1 = second, etc.)
          */
@@ -1885,6 +1505,15 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         label?: T;
         url?: T;
         openInNewTab?: T;
+        children?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              openInNewTab?: T;
+              order?: T;
+              id?: T;
+            };
         order?: T;
         id?: T;
       };

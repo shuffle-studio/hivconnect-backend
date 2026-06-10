@@ -22,6 +22,13 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS",
   },
+  "routes": [
+    {
+      "pattern": "login.hivconnectcentralnj.com",
+      "zone_name": "hivconnectcentralnj.com",
+      "custom_domain": true,
+    },
+  ],
   "d1_databases": [
     {
       "binding": "D1",
@@ -51,7 +58,8 @@
   "vars": {
     "PAYLOAD_PUBLIC_SERVER_URL": "https://login.hivconnectcentralnj.com",
     "DEPLOY_HOOK_URL": "https://api.cloudflare.com/client/v4/pages/webhooks/deploy_hooks/60788d5a-a22a-4bcf-a427-bdba665710d9",
-    "PAYLOAD_SECRET": "N3DHalBhL4HWguvVag6xbyEugcS/Ovstd/PmQCymkPA=",
-    "TURNSTILE_SECRET_KEY": "" // Set as encrypted secret in CF Dashboard: Workers → hivconnect-backend → Settings → Variables
+    // PAYLOAD_SECRET and TURNSTILE_SECRET_KEY are intentionally NOT declared here.
+    // They are encrypted secrets, managed via: wrangler secret put <NAME>
+    // Declaring a secret as a plain var causes every deploy to overwrite it.
   }
 }

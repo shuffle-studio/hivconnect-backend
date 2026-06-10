@@ -36,8 +36,9 @@ export const MembershipApplications: CollectionConfig = {
     afterDelete: [afterDeleteHook],
   },
   access: {
-    // Public read access for now (we can restrict later if needed)
-    read: () => true,
+    // Authenticated-only read — applications contain sensitive PII and must
+    // never be exposed through the public API.
+    read: ({ req: { user } }) => !!user,
     // Public create (for form submissions)
     create: () => true,
     // Admin only for updates
@@ -68,7 +69,8 @@ export const MembershipApplications: CollectionConfig = {
         position: 'sidebar',
       },
     },
-    // Personal Information - FLAT (no groups for now)
+    // Personal Information (flat schema). Core fields are required; the rest
+    // are optional so this migration is purely additive to existing rows.
     {
       name: 'firstName',
       type: 'text',
@@ -78,6 +80,18 @@ export const MembershipApplications: CollectionConfig = {
       name: 'lastName',
       type: 'text',
       required: true,
+    },
+    {
+      name: 'birthMonth',
+      type: 'text',
+    },
+    {
+      name: 'birthDay',
+      type: 'text',
+    },
+    {
+      name: 'birthYear',
+      type: 'text',
     },
     {
       name: 'email',
@@ -92,11 +106,28 @@ export const MembershipApplications: CollectionConfig = {
     {
       name: 'phone',
       type: 'text',
+      admin: { description: 'Primary phone (auto-filled from cell or home)' },
+    },
+    {
+      name: 'homePhone',
+      type: 'text',
+    },
+    {
+      name: 'cellPhone',
+      type: 'text',
+    },
+    {
+      name: 'bestTimeToCall',
+      type: 'text',
     },
     {
       name: 'streetAddress',
       type: 'text',
       required: true,
+    },
+    {
+      name: 'addressLine2',
+      type: 'text',
     },
     {
       name: 'city',
@@ -113,6 +144,89 @@ export const MembershipApplications: CollectionConfig = {
       type: 'text',
       required: true,
     },
+    {
+      name: 'country',
+      type: 'text',
+    },
+    // Employment
+    {
+      name: 'isEmployed',
+      type: 'checkbox',
+    },
+    {
+      name: 'employers',
+      type: 'text',
+    },
+    {
+      name: 'jobTitle',
+      type: 'text',
+    },
+    {
+      name: 'companyAddress',
+      type: 'text',
+    },
+    {
+      name: 'companyAddressLine2',
+      type: 'text',
+    },
+    {
+      name: 'companyCity',
+      type: 'text',
+    },
+    {
+      name: 'companyState',
+      type: 'text',
+    },
+    {
+      name: 'companyZipCode',
+      type: 'text',
+    },
+    // Demographics
+    {
+      name: 'receivedRyanWhiteServices',
+      type: 'checkbox',
+    },
+    {
+      name: 'gender',
+      type: 'text',
+    },
+    {
+      name: 'age',
+      type: 'text',
+    },
+    {
+      name: 'raceEthnicity',
+      type: 'text',
+    },
+    {
+      name: 'mailingLists',
+      type: 'array',
+      labels: { singular: 'Mailing List', plural: 'Mailing Lists' },
+      fields: [{ name: 'list', type: 'text' }],
+    },
+    {
+      name: 'languages',
+      type: 'array',
+      fields: [{ name: 'language', type: 'text' }],
+    },
+    {
+      name: 'diverseExperience',
+      type: 'array',
+      fields: [{ name: 'experience', type: 'text' }],
+    },
+    {
+      name: 'serviceProviders',
+      type: 'array',
+      fields: [{ name: 'provider', type: 'text' }],
+    },
+    {
+      name: 'needsAssistance',
+      type: 'checkbox',
+    },
+    {
+      name: 'assistanceDescription',
+      type: 'textarea',
+    },
     // Experience
     {
       name: 'whyJoin',
@@ -125,6 +239,24 @@ export const MembershipApplications: CollectionConfig = {
       type: 'textarea',
       required: true,
       label: 'HIV/AIDS Experience',
+    },
+    {
+      name: 'backgroundExperience',
+      type: 'textarea',
+    },
+    {
+      name: 'eligibilityInfo',
+      type: 'textarea',
+    },
+    {
+      name: 'membershipCategories',
+      type: 'array',
+      fields: [{ name: 'category', type: 'text' }],
+    },
+    {
+      name: 'experienceInterests',
+      type: 'array',
+      fields: [{ name: 'interest', type: 'text' }],
     },
     // Commitment
     {
