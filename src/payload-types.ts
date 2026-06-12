@@ -77,6 +77,8 @@ export interface Config {
     pages: Page;
     'membership-applications': MembershipApplication;
     'contact-submissions': ContactSubmission;
+    'service-provider-options': ServiceProviderOption;
+    committees: Committee;
     events: Event;
     bylaws: Bylaw;
     'service-standards': ServiceStandard;
@@ -98,6 +100,8 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     'membership-applications': MembershipApplicationsSelect<false> | MembershipApplicationsSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
+    'service-provider-options': ServiceProviderOptionsSelect<false> | ServiceProviderOptionsSelect<true>;
+    committees: CommitteesSelect<false> | CommitteesSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     bylaws: BylawsSelect<false> | BylawsSelect<true>;
     'service-standards': ServiceStandardsSelect<false> | ServiceStandardsSelect<true>;
@@ -669,6 +673,52 @@ export interface ContactSubmission {
   createdAt: string;
 }
 /**
+ * Provider options shown on the membership form (Step 3). Edit here to update the form.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-provider-options".
+ */
+export interface ServiceProviderOption {
+  id: number;
+  /**
+   * Exact text shown (and saved) for this provider option.
+   */
+  label: string;
+  /**
+   * Display order (lower = first).
+   */
+  order?: number | null;
+  /**
+   * Uncheck to hide from the form without deleting.
+   */
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Mailing-list / committee options shown on the membership form (Step 1).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "committees".
+ */
+export interface Committee {
+  id: number;
+  /**
+   * Exact text shown (and saved), e.g. "Planning Council (usually 1st Tuesday of each month 6-8pm)".
+   */
+  label: string;
+  /**
+   * Display order (lower = first).
+   */
+  order?: number | null;
+  /**
+   * Uncheck to hide from the form without deleting.
+   */
+  active?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Community events, meetings, and activities
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -892,6 +942,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'contact-submissions';
         value: number | ContactSubmission;
+      } | null)
+    | ({
+        relationTo: 'service-provider-options';
+        value: number | ServiceProviderOption;
+      } | null)
+    | ({
+        relationTo: 'committees';
+        value: number | Committee;
       } | null)
     | ({
         relationTo: 'events';
@@ -1275,6 +1333,28 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
   message?: T;
   consentGiven?: T;
   adminNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "service-provider-options_select".
+ */
+export interface ServiceProviderOptionsSelect<T extends boolean = true> {
+  label?: T;
+  order?: T;
+  active?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "committees_select".
+ */
+export interface CommitteesSelect<T extends boolean = true> {
+  label?: T;
+  order?: T;
+  active?: T;
   updatedAt?: T;
   createdAt?: T;
 }
