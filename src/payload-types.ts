@@ -669,6 +669,22 @@ export interface MembershipShareLog {
    * When the share link stops working.
    */
   expiresAt: string;
+  /**
+   * Unique id (jti) of the signed share token this row tracks.
+   */
+  tokenId?: string | null;
+  /**
+   * Whether this link has been stopped before its expiry.
+   */
+  revoked?: boolean | null;
+  /**
+   * When the link was revoked.
+   */
+  revokedAt?: string | null;
+  /**
+   * The reviewer who revoked the link.
+   */
+  revokedBy?: (number | null) | User;
   updatedAt: string;
   createdAt: string;
 }
@@ -1354,6 +1370,10 @@ export interface MembershipShareLogSelect<T extends boolean = true> {
   application?: T;
   sharedBy?: T;
   expiresAt?: T;
+  tokenId?: T;
+  revoked?: T;
+  revokedAt?: T;
+  revokedBy?: T;
   updatedAt?: T;
   createdAt?: T;
 }
