@@ -52,3 +52,5 @@ node_modules/
 # OpenNext
 .open-next
 .wrangler
+# local deployment/debug logs
+deployment-log*.txt
