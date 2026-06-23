@@ -15,7 +15,7 @@ export const MembershipShareLog: CollectionConfig = {
   slug: 'membership-share-log',
   admin: {
     useAsTitle: 'id',
-    defaultColumns: ['application', 'sharedBy', 'createdAt', 'expiresAt'],
+    defaultColumns: ['application', 'sharedBy', 'createdAt', 'expiresAt', 'revoked'],
     description: 'Audit log of membership application share links (who shared what, when).',
     group: 'Logs',
   },
@@ -53,6 +53,43 @@ export const MembershipShareLog: CollectionConfig = {
       admin: {
         description: 'When the share link stops working.',
         date: { pickerAppearance: 'dayAndTime' },
+      },
+    },
+    {
+      // SHU-1018: the token's `jti`. Looked up on every public open so a link
+      // can be revoked before its natural expiry. Indexed for cheap lookups.
+      name: 'tokenId',
+      type: 'text',
+      index: true,
+      admin: {
+        description: 'Unique id (jti) of the signed share token this row tracks.',
+      },
+    },
+    {
+      // SHU-1018: when true, the public open endpoint rejects the link.
+      name: 'revoked',
+      type: 'checkbox',
+      defaultValue: false,
+      admin: {
+        description: 'Whether this link has been stopped before its expiry.',
+      },
+    },
+    {
+      name: 'revokedAt',
+      type: 'date',
+      admin: {
+        description: 'When the link was revoked.',
+        date: { pickerAppearance: 'dayAndTime' },
+        condition: (data) => Boolean(data?.revoked),
+      },
+    },
+    {
+      name: 'revokedBy',
+      type: 'relationship',
+      relationTo: 'users',
+      admin: {
+        description: 'The reviewer who revoked the link.',
+        condition: (data) => Boolean(data?.revoked),
       },
     },
     // `createdAt` is added automatically by Payload (timestamps default true).

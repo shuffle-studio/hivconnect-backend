@@ -19,6 +19,11 @@ export interface ShareTokenPayload {
   appId: string
   /** Expiry as epoch milliseconds. */
   exp: number
+  /**
+   * Unique token id (SHU-1018). Lets each issued link be tracked in the
+   * `membership-share-log` audit collection so it can be revoked before expiry.
+   */
+  jti: string
 }
 
 const encoder = new TextEncoder()
@@ -64,10 +69,38 @@ async function importKey(): Promise<CryptoKey> {
   )
 }
 
-/** Sign a payload, returning a `payload.signature` share token. */
-export async function signShareToken(payload: ShareTokenPayload): Promise<string> {
+/** Input accepted by `signShareToken`; `jti` is optional and generated if absent. */
+export interface SignShareTokenInput {
+  appId: string
+  exp: number
+  jti?: string
+}
+
+/**
+ * Serialize claims to a CANONICAL JSON string with a fixed key order
+ * (`appId`, `exp`, `jti`). This guarantees signing is deterministic: the same
+ * `{ appId, exp, jti }` always produces the exact same token, so a share URL
+ * can be reproduced (re-signed) from a stored log row (SHU-1018).
+ */
+function serializePayload(payload: ShareTokenPayload): string {
+  return JSON.stringify({ appId: payload.appId, exp: payload.exp, jti: payload.jti })
+}
+
+/**
+ * Sign a payload, returning a `payload.signature` share token.
+ *
+ * A `jti` (unique token id) may be supplied to reproduce an existing token;
+ * when omitted, a fresh `crypto.randomUUID()` is generated. Signing is
+ * deterministic for identical `{ appId, exp, jti }` inputs.
+ */
+export async function signShareToken(input: SignShareTokenInput): Promise<string> {
+  const fullPayload: ShareTokenPayload = {
+    appId: input.appId,
+    exp: input.exp,
+    jti: input.jti ?? crypto.randomUUID(),
+  }
   const key = await importKey()
-  const payloadBytes = encoder.encode(JSON.stringify(payload))
+  const payloadBytes = encoder.encode(serializePayload(fullPayload))
   const payloadB64 = bytesToBase64Url(payloadBytes)
   const signature = await crypto.subtle.sign('HMAC', key, payloadBytes)
   const sigB64 = bytesToBase64Url(new Uint8Array(signature))
@@ -84,7 +117,9 @@ function isValidPayload(value: unknown): value is ShareTokenPayload {
     typeof candidate.appId === 'string' &&
     candidate.appId.length > 0 &&
     typeof candidate.exp === 'number' &&
-    Number.isFinite(candidate.exp)
+    Number.isFinite(candidate.exp) &&
+    typeof candidate.jti === 'string' &&
+    candidate.jti.length > 0
   )
 }
 

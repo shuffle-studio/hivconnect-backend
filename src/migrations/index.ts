@@ -9,6 +9,7 @@ import * as migration_20251217_193451_add_bylaws_service_standards from './20251
 import * as migration_20260610_185942_add_contact_and_expand_membership from './20260610_185942_add_contact_and_expand_membership';
 import * as migration_20260611_000846_add_form_option_collections from './20260611_000846_add_form_option_collections';
 import * as migration_20260623_154851_add_membership_share_log from './20260623_154851_add_membership_share_log';
+import * as migration_20260623_160000_add_share_link_revocation from './20260623_160000_add_share_link_revocation';
 
 export const migrations = [
   {
@@ -65,5 +66,10 @@ export const migrations = [
     up: migration_20260623_154851_add_membership_share_log.up,
     down: migration_20260623_154851_add_membership_share_log.down,
     name: '20260623_154851_add_membership_share_log'
+  },
+  {
+    up: migration_20260623_160000_add_share_link_revocation.up,
+    down: migration_20260623_160000_add_share_link_revocation.down,
+    name: '20260623_160000_add_share_link_revocation'
   },
 ];
