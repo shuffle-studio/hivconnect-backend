@@ -1,0 +1,7 @@
+# pnpm 10+ reads the build-script allowlist from here (moved out of package.json's
+# "pnpm" field). These packages have native/post-install build steps we trust.
+onlyBuiltDependencies:
+  - sharp
+  - esbuild
+  - unrs-resolver
+  - workerd
