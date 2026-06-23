@@ -1,5 +1,6 @@
 import { CollectionConfig, APIError } from 'payload';
 import { afterChangeHook, afterDeleteHook } from '../hooks/triggerFrontendRebuild';
+import { membershipExportEndpoints } from '../endpoints/membershipExport';
 
 async function verifyTurnstile(token: string, secret: string): Promise<boolean> {
   const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
@@ -18,6 +19,8 @@ export const MembershipApplications: CollectionConfig = {
     defaultColumns: ['fullName', 'email', 'createdAt', 'status'],
     description: 'Planning Council membership applications with status tracking',
   },
+  // Export & share (SHU-1017): per-document PDF/DOCX download, signed share links.
+  endpoints: membershipExportEndpoints,
   hooks: {
     beforeValidate: [
       async ({ data, operation }) => {
@@ -46,6 +49,18 @@ export const MembershipApplications: CollectionConfig = {
     delete: ({ req: { user } }) => !!user,
   },
   fields: [
+    // Export & share actions (SHU-1017): Download PDF / Word + Create share link.
+    // UI-only field rendered in the sidebar; carries no stored data.
+    {
+      name: 'exportActions',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: {
+          Field: '/components/admin/MembershipExportActions#default',
+        },
+      },
+    },
     // Simple auto-generated full name
     {
       name: 'fullName',

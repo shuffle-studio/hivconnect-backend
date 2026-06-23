@@ -32,10 +32,12 @@
     "@payloadcms/storage-r2": "3.65.0",
     "@payloadcms/ui": "3.65.0",
     "cross-env": "^7.0.3",
+    "docx": "^9.5.1",
     "dotenv": "16.4.7",
     "graphql": "^16.8.1",
     "next": "15.4.7",
     "payload": "3.65.0",
+    "pdf-lib": "^1.17.1",
     "react": "19.1.0",
     "react-dom": "19.1.0"
   },
