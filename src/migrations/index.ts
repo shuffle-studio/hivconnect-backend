@@ -8,6 +8,7 @@ import * as migration_20251212_172450 from './20251212_172450';
 import * as migration_20251217_193451_add_bylaws_service_standards from './20251217_193451_add_bylaws_service_standards';
 import * as migration_20260610_185942_add_contact_and_expand_membership from './20260610_185942_add_contact_and_expand_membership';
 import * as migration_20260611_000846_add_form_option_collections from './20260611_000846_add_form_option_collections';
+import * as migration_20260623_154851_add_membership_share_log from './20260623_154851_add_membership_share_log';
 
 export const migrations = [
   {
@@ -58,6 +59,11 @@ export const migrations = [
   {
     up: migration_20260611_000846_add_form_option_collections.up,
     down: migration_20260611_000846_add_form_option_collections.down,
-    name: '20260611_000846_add_form_option_collections'
+    name: '20260611_000846_add_form_option_collections',
+  },
+  {
+    up: migration_20260623_154851_add_membership_share_log.up,
+    down: migration_20260623_154851_add_membership_share_log.down,
+    name: '20260623_154851_add_membership_share_log'
   },
 ];

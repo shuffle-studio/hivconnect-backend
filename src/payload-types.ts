@@ -76,6 +76,7 @@ export interface Config {
     faqs: Faq;
     pages: Page;
     'membership-applications': MembershipApplication;
+    'membership-share-log': MembershipShareLog;
     'contact-submissions': ContactSubmission;
     'service-provider-options': ServiceProviderOption;
     committees: Committee;
@@ -99,6 +100,7 @@ export interface Config {
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     'membership-applications': MembershipApplicationsSelect<false> | MembershipApplicationsSelect<true>;
+    'membership-share-log': MembershipShareLogSelect<false> | MembershipShareLogSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     'service-provider-options': ServiceProviderOptionsSelect<false> | ServiceProviderOptionsSelect<true>;
     committees: CommitteesSelect<false> | CommitteesSelect<true>;
@@ -648,6 +650,29 @@ export interface MembershipApplication {
   createdAt: string;
 }
 /**
+ * Audit log of membership application share links (who shared what, when).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "membership-share-log".
+ */
+export interface MembershipShareLog {
+  id: number;
+  /**
+   * The application this share link grants access to.
+   */
+  application: number | MembershipApplication;
+  /**
+   * The reviewer who created the share link.
+   */
+  sharedBy?: (number | null) | User;
+  /**
+   * When the share link stops working.
+   */
+  expiresAt: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Contact form messages from the public website
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -938,6 +963,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'membership-applications';
         value: number | MembershipApplication;
+      } | null)
+    | ({
+        relationTo: 'membership-share-log';
+        value: number | MembershipShareLog;
       } | null)
     | ({
         relationTo: 'contact-submissions';
@@ -1314,6 +1343,17 @@ export interface MembershipApplicationsSelect<T extends boolean = true> {
   agreedToCommitments?: T;
   consentGiven?: T;
   adminNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "membership-share-log_select".
+ */
+export interface MembershipShareLogSelect<T extends boolean = true> {
+  application?: T;
+  sharedBy?: T;
+  expiresAt?: T;
   updatedAt?: T;
   createdAt?: T;
 }
