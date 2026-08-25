@@ -1,8 +1,10 @@
 # SHU-EV2 — Events v2 scaffold & v1 remediation
 
-Status: **scaffolded, not wired.** Nothing below is registered in
-`payload.config.ts` yet. Every file added here is NEW; no existing file was
-modified.
+Status: **parked outside the build.** The v2 files live in
+`docs/scaffold/events-v2/` and are excluded from `tsconfig.json`. See that
+folder's README for the wiring order and the reason they are not in `src/`.
+
+Wired and live: `src/lib/email.ts` (Resend adapter) only.
 
 Trigger: Terri Fox, Aug 25 2026 — *"a timeframe for completing the 2nd part of
 our contract stuff and basically when we can see the webcalendar changes."*
@@ -164,3 +166,28 @@ depends on nothing unwired.
 `src/lib/comms.ts` (shared shufflestudio-comms Worker) superseded by
 `src/lib/email.ts` + `src/lib/eventNotifications.ts`. Old file staged in
 `_to_delete/`.
+
+
+**2026-08-25 — v2 scaffolds moved OUT of `src/`.**
+Putting them in `src/` broke the Cloudflare deploy. `tsconfig.json` uses
+`"include": ["**/*.ts"]` — the whole repo — and `next build` typechecks
+everything included, imported or not. First failure:
+
+    ./src/collections/EventRegistrations.ts:86:21
+    Type error: Property 'registration' does not exist on type 'Event'
+
+correct and expected, since `eventRegistrationFields` was never spread into
+`Events.ts` and types were never regenerated. Three more failures were queued
+behind it (`stripe.ts` imports an uninstalled package).
+
+Resolution: v2 files → `docs/scaffold/events-v2/`; Stripe files → `_to_delete/`;
+`docs` and `_to_delete` added to `tsconfig.json` `exclude`. Verified with the
+project's real config (`tsc --noEmit -p tsconfig.json`, exit 0, 79 files) rather
+than a targeted file list — the targeted run is what missed this originally.
+
+**Rule for this repo: anything under a path `tsconfig.json` includes must
+compile, whether or not it is imported.**
+
+**Stripe dropped from v2 scope.** Ryan White Part A planning council, free
+community events, no payment need in the brief or client history. Files in
+`_to_delete/`, recoverable from commit `8651100`.
