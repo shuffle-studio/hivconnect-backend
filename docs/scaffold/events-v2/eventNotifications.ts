@@ -2,9 +2,9 @@ import type { Payload } from 'payload';
 import { isEmailConfigured } from './email';
 
 /**
- * EV2-03 — event registration email.
+ * EV2-03 - event registration email.
  *
- * Sends through this project's own Payload email adapter (Resend — see
+ * Sends through this project's own Payload email adapter (Resend - see
  * ./email.ts), NOT through the shared shufflestudio-comms Worker. Each project
  * owns its sender, its domain reputation, and its API key.
  *
@@ -127,7 +127,7 @@ export async function sendRsvpConfirmation(
 
 /**
  * Internal heads-up to staff.
- * Carries a record ID and a CMS link only — never attendee details, so the
+ * Carries a record ID and a CMS link only - never attendee details, so the
  * notification itself is not a PII surface sitting in an inbox.
  */
 export async function notifyStaffOfRsvp(

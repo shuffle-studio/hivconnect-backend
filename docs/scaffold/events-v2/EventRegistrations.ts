@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload';
 import { sendRsvpConfirmation, notifyStaffOfRsvp, isEmailConfigured } from '../lib/eventNotifications';
 
 /**
- * EV2-04 / EV2-05 — RSVP + attendee management.
+ * EV2-04 / EV2-05 - RSVP + attendee management.
  *
  * Change Order #1 deferred "Event registration/RSVP system" and "Attendee
  * management" to 2026. Today the only RSVP affordance is Events.rsvpLink, a
@@ -10,7 +10,7 @@ import { sendRsvpConfirmation, notifyStaffOfRsvp, isEmailConfigured } from '../l
  *
  * Follows the ContactSubmissions / MembershipApplications pattern already in
  * this repo: public create guarded by Turnstile in a beforeValidate hook,
- * authenticated read. No custom endpoint needed — the standard Payload REST
+ * authenticated read. No custom endpoint needed - the standard Payload REST
  * create is the RSVP API.
  *
  * PII: attendee name/email/phone for HIV-services events is sensitive. Per the
@@ -53,7 +53,7 @@ export const EventRegistrations: CollectionConfig = {
         }
 
         const secret = process.env.TURNSTILE_SECRET_KEY;
-        // No-op if Turnstile is not configured (safe rollout) — matches
+        // No-op if Turnstile is not configured (safe rollout) - matches
         // ContactSubmissions.
         if (!secret) return data;
 
@@ -126,10 +126,10 @@ export const EventRegistrations: CollectionConfig = {
       async ({ doc, operation, req }) => {
         if (operation !== 'create') return doc;
         // Paid registrations get their confirmation from the Stripe webhook,
-        // not here — otherwise we confirm a seat nobody paid for.
+        // not here - otherwise we confirm a seat nobody paid for.
         if (doc.status === 'pending-payment') return doc;
         if (!isEmailConfigured()) {
-          console.warn('[EventRegistrations] RESEND_API_KEY unset — no confirmation sent');
+          console.warn('[EventRegistrations] RESEND_API_KEY unset - no confirmation sent');
           return doc;
         }
 
@@ -144,7 +144,7 @@ export const EventRegistrations: CollectionConfig = {
             eventStart: event.startDate,
             locationText:
               event.location?.type === 'virtual'
-                ? 'Virtual event — link in your confirmation'
+                ? 'Virtual event - link in your confirmation'
                 : [event.location?.venueName, event.location?.city].filter(Boolean).join(', ') || 'TBA',
             eventSlug: event.slug,
             eventId: event.id,
@@ -155,7 +155,7 @@ export const EventRegistrations: CollectionConfig = {
 
           await notifyStaffOfRsvp(req.payload, event.title, doc.id, doc.status === 'waitlisted');
         } catch (err) {
-          // Never fail the registration because mail failed — the seat is real.
+          // Never fail the registration because mail failed - the seat is real.
           console.error(`[EventRegistrations] notification failed for #${doc.id}:`, (err as Error).message);
         }
 

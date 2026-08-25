@@ -1,4 +1,4 @@
-# SHU-EV2 — Events v2 scaffold & v1 remediation
+# SHU-EV2 - Events v2 scaffold & v1 remediation
 
 Status: **parked outside the build.** The v2 files live in
 `docs/scaffold/events-v2/` and are excluded from `tsconfig.json`. See that
@@ -6,7 +6,7 @@ folder's README for the wiring order and the reason they are not in `src/`.
 
 Wired and live: `src/lib/email.ts` (Resend adapter) only.
 
-Trigger: Terri Fox, Aug 25 2026 — *"a timeframe for completing the 2nd part of
+Trigger: Terri Fox, Aug 25 2026 - *"a timeframe for completing the 2nd part of
 our contract stuff and basically when we can see the webcalendar changes."*
 
 ## The contract position
@@ -16,17 +16,17 @@ our contract stuff and basically when we can see the webcalendar changes."*
 | SOW, Nov 2025 | "Events & Calendar module" is **out of scope**, deferred to v2 2026 |
 | Change Order #1, Dec 11 2025 | Pulls EV001 Events MVP **into v1** for $2,000 |
 | Change Order #1 | Defers 5 items to "2026 Enhancement" |
-| Invoice 20260403-HIV | $2,000 paid June 2 2026 — EV001 is **paid for** |
+| Invoice 20260403-HIV | $2,000 paid June 2 2026 - EV001 is **paid for** |
 
-### v1 remediation (owed — already billed and paid)
+### v1 remediation (owed - already billed and paid)
 
 Change Order #1's EV001 frontend deliverables included, verbatim:
 
-- "Calendar-style display (simple grid view)" — **NOT BUILT**
-- "Filter by category and date range" — **NOT BUILT**
-- "Simple recurring event support (optional)" — not built; marked optional
-- Automatic frontend rebuild — built (`src/hooks/triggerFrontendRebuild.ts`)
-- Event detail pages, mobile responsive, SEO — built
+- "Calendar-style display (simple grid view)" - **NOT BUILT**
+- "Filter by category and date range" - **NOT BUILT**
+- "Simple recurring event support (optional)" - not built; marked optional
+- Automatic frontend rebuild - built (`src/hooks/triggerFrontendRebuild.ts`)
+- Event detail pages, mobile responsive, SEO - built
 
 `hivconnect-frontend/src/pages/events/index.astro` renders a card grid of
 upcoming events plus a list of past events. A CSS `grid` of cards is not a
@@ -50,7 +50,7 @@ The five deferred items, mapped to the files below.
 | `src/lib/ics.ts` | EV2-02 | none (pure) |
 | `src/endpoints/eventsCalendarFeed.ts` | EV2-02 | `Events.endpoints = eventCalendarEndpoints` |
 | `src/collections/EventRegistrations.ts` | EV2-04/05 | Import + add to `payload.config.ts` `collections` |
-| `src/lib/email.ts` | EV2-03 / v1 fix | **WIRED** — `email: resendAdapter` in `payload.config.ts` |
+| `src/lib/email.ts` | EV2-03 / v1 fix | **WIRED** - `email: resendAdapter` in `payload.config.ts` |
 | `src/lib/eventNotifications.ts` | EV2-03 | none |
 | `src/lib/stripe.ts` | EV2-06 | `pnpm add stripe` |
 | `src/endpoints/eventPayments.ts` | EV2-06 | `createCheckout` → `EventRegistrations.endpoints`; `stripeEventsWebhook` → root `endpoints` in `payload.config.ts` |
@@ -66,11 +66,11 @@ A migration is required after wiring: `pnpm payload migrate:create`.
 | File | Item |
 |---|---|
 | `src/lib/eventsCalendar.ts` | recurrence expansion, month grid, filter helpers |
-| `src/components/events/EventsCalendar.tsx` | **v1 remediation** — month grid + category + date-range filters |
+| `src/components/events/EventsCalendar.tsx` | **v1 remediation** - month grid + category + date-range filters |
 | `src/components/events/AddToCalendarButtons.tsx` | EV2-02 |
 | `src/components/events/EventRsvpForm.tsx` | EV2-04/06 |
 
-Wiring for `src/pages/events/index.astro` — replace the two `<section>` blocks
+Wiring for `src/pages/events/index.astro` - replace the two `<section>` blocks
 with a single island, keeping the existing fetch in frontmatter:
 
 ```astro
@@ -82,7 +82,7 @@ const today = new Date().toISOString();
 <EventsCalendar client:load events={allEvents} today={today} />
 ```
 
-`client:load` (not `client:visible`) — the calendar is the page's primary
+`client:load` (not `client:visible`) - the calendar is the page's primary
 content and should not pop in.
 
 ## Platform notes
@@ -93,7 +93,7 @@ Astro static on Cloudflare Pages (`public/_headers`, `public/_redirects`).
 - `hivconnect-frontend/netlify.toml` is **stale** and should be deleted. Its CSP
   sets `connect-src 'self' https://api.netlify.com`, which would block every
   call to the backend. The live CSP is `public/_headers`, and it already
-  allowlists `login.hivconnectcentralnj.com` and `challenges.cloudflare.com` —
+  allowlists `login.hivconnectcentralnj.com` and `challenges.cloudflare.com` -
   so the RSVP island needs no header change.
 - The frontend is **static**: it has no server routes. Every dynamic thing here
   (.ics feed, RSVP POST, Stripe webhook) must live on the backend Worker. That
@@ -103,7 +103,7 @@ Astro static on Cloudflare Pages (`public/_headers`, `public/_redirects`).
   Node. This one does not. `src/lib/stripe.ts` here uses
   `Stripe.createFetchHttpClient()` and `constructEventAsync()`. Copying the
   shuffle-studio version verbatim throws at runtime, on the first real charge.
-- **Email — FIXED.** `payload.config.ts` had no `email:` adapter at all, so
+- **Email - FIXED.** `payload.config.ts` had no `email:` adapter at all, so
   `payload.sendEmail()` was a no-op and Payload's own transactional mail
   (password reset, verification) never sent. That is the likely root of the June
   2026 "notifications never arrived" thread and the two manual admin password
@@ -111,7 +111,7 @@ Astro static on Cloudflare Pages (`public/_headers`, `public/_redirects`).
 - **Comms are per-project, not shared.** Each project gets its own Resend key,
   verified domain and from-address. A shared sender means one project's bounce
   rate drags down every other project's deliverability, and a leaked key exposes
-  all of them. HIV Connect especially should send as itself — recipients are
+  all of them. HIV Connect especially should send as itself - recipients are
   being told about HIV services. `src/lib/email.ts` implements the Resend REST
   call directly (one POST) rather than adding `@payloadcms/email-resend`, which
   keeps the Worker bundle small and adds no dependency.
@@ -138,7 +138,7 @@ Clean under `tsc --noEmit --skipLibCheck`:
 `eventRegistrationSettings.ts`, `eventsCalendarFeed.ts`, `EventRegistrations.ts`,
 `payload.config.ts`. Frontend: all four new files clean under `strict: true`.
 
-Not yet checkable: `lib/stripe.ts`, `endpoints/eventPayments.ts` — require
+Not yet checkable: `lib/stripe.ts`, `endpoints/eventPayments.ts` - require
 `pnpm add stripe`.
 
 ## PII
@@ -151,26 +151,26 @@ notification email deliberately carries only a record ID and a CMS link.
 
 ## Changelog
 
-**2026-08-25 — v1 remediation SHIPPED.**
+**2026-08-25 - v1 remediation SHIPPED.**
 `hivconnect-frontend/src/pages/events/index.astro` now mounts
 `<EventsCalendar client:load>`: month grid, category chips, date-range select,
 calendar/list toggle. This closes the two outstanding EV001 frontend
-deliverables. Run `npm ci && npm run build` to confirm before deploying — the
+deliverables. Run `npm ci && npm run build` to confirm before deploying - the
 device VM has no `node_modules`, so this was verified by typecheck, not a build.
 
 Deliberately NOT shipped in that change: the "Subscribe to this calendar" link,
 because `/api/events/calendar.ics` is v2 scope and not registered. What is live
 depends on nothing unwired.
 
-**2026-08-25 — comms moved to per-project Resend.**
+**2026-08-25 - comms moved to per-project Resend.**
 `src/lib/comms.ts` (shared shufflestudio-comms Worker) superseded by
 `src/lib/email.ts` + `src/lib/eventNotifications.ts`. Old file staged in
 `_to_delete/`.
 
 
-**2026-08-25 — v2 scaffolds moved OUT of `src/`.**
+**2026-08-25 - v2 scaffolds moved OUT of `src/`.**
 Putting them in `src/` broke the Cloudflare deploy. `tsconfig.json` uses
-`"include": ["**/*.ts"]` — the whole repo — and `next build` typechecks
+`"include": ["**/*.ts"]` - the whole repo - and `next build` typechecks
 everything included, imported or not. First failure:
 
     ./src/collections/EventRegistrations.ts:86:21
@@ -183,7 +183,7 @@ behind it (`stripe.ts` imports an uninstalled package).
 Resolution: v2 files → `docs/scaffold/events-v2/`; Stripe files → `_to_delete/`;
 `docs` and `_to_delete` added to `tsconfig.json` `exclude`. Verified with the
 project's real config (`tsc --noEmit -p tsconfig.json`, exit 0, 79 files) rather
-than a targeted file list — the targeted run is what missed this originally.
+than a targeted file list - the targeted run is what missed this originally.
 
 **Rule for this repo: anything under a path `tsconfig.json` includes must
 compile, whether or not it is imported.**

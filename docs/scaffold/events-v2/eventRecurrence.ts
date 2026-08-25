@@ -1,7 +1,7 @@
 import type { Field } from 'payload';
 
 /**
- * EV2-01 — Recurring event support.
+ * EV2-01 - Recurring event support.
  *
  * Change Order #1 listed "simple recurring event support (optional)" under the
  * EV001 MVP backend. It was never built. This is the field group; spread it
@@ -95,7 +95,7 @@ export const eventRecurrenceFields: Field[] = [
         name: 'until',
         type: 'date',
         admin: {
-          description: 'Last date the series can occur. Required — open-ended series break the calendar feed.',
+          description: 'Last date the series can occur. Required - open-ended series break the calendar feed.',
           date: { pickerAppearance: 'dayOnly' },
           condition: (data) => isRecurring(data) && data?.recurrence?.endMode === 'until',
         },
@@ -135,7 +135,7 @@ export const eventRecurrenceFields: Field[] = [
 
 /**
  * Build an RFC 5545 RRULE string from the field group above.
- * Returns null for non-recurring events. Pure — safe on Workers.
+ * Returns null for non-recurring events. Pure - safe on Workers.
  */
 export function buildRRule(recurrence: any, startDate?: string | Date | null): string | null {
   if (!recurrence || !recurrence.frequency || recurrence.frequency === 'none') return null;
@@ -176,7 +176,7 @@ export function buildRRule(recurrence: any, startDate?: string | Date | null): s
 }
 
 /**
- * beforeChange hook — keeps `recurrence.rrule` in sync. Add to Events.hooks.beforeChange.
+ * beforeChange hook - keeps `recurrence.rrule` in sync. Add to Events.hooks.beforeChange.
  */
 export const syncRRuleHook = async ({ data }: { data: any }) => {
   if (data?.recurrence) {

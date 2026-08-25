@@ -2,14 +2,14 @@ import type { Endpoint, PayloadRequest } from 'payload';
 import { buildCalendar, googleCalendarUrl, type IcsEvent } from '../lib/ics';
 
 /**
- * EV2-02 — public calendar feed endpoints.
+ * EV2-02 - public calendar feed endpoints.
  *
  * Wire into Events.endpoints (see docs/specs/SHU-EV2-events-v2-scaffold.md):
  *   GET /api/events/calendar.ics      → whole published calendar (subscribable)
  *   GET /api/events/:id/event.ics     → one event
  *   GET /api/events/:id/google        → 302 to Google's "add event" template
  *
- * These are PUBLIC and unauthenticated by design — a calendar feed nobody can
+ * These are PUBLIC and unauthenticated by design - a calendar feed nobody can
  * subscribe to without credentials is not a calendar feed. Access is still
  * scoped to `status: published`, matching Events.access.read for anonymous
  * users, so drafts never leak.
@@ -64,7 +64,7 @@ export function toIcsEvent(doc: any): IcsEvent {
     .trim();
 
   return {
-    // Stable across edits and globally unique — clients key updates off UID.
+    // Stable across edits and globally unique - clients key updates off UID.
     uid: `event-${doc.id}@hivconnectcentralnj.com`,
     title: doc.title,
     description,
@@ -108,7 +108,7 @@ export const eventsCalendarFeed: Endpoint = {
       overrideAccess: true,
     });
 
-    const body = buildCalendar(docs.map(toIcsEvent), `${ORG_NAME} — Events & Calendar`);
+    const body = buildCalendar(docs.map(toIcsEvent), `${ORG_NAME} - Events & Calendar`);
     return icsResponse(body, 'hiv-connect-central-nj.ics');
   },
 };

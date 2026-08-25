@@ -5,8 +5,8 @@ import type { EmailAdapter, SendEmailOptions } from 'payload';
  *
  * WHY THIS EXISTS
  * `payload.config.ts` has shipped with no `email:` key, which means
- * `payload.sendEmail()` is a no-op and Payload's own transactional mail —
- * admin password reset, user verification — has never worked. That is the
+ * `payload.sendEmail()` is a no-op and Payload's own transactional mail -
+ * admin password reset, user verification - has never worked. That is the
  * root of the June 2026 support cycle where Terri's admin login had to be
  * reset by hand twice and a submitted membership application produced no
  * notification. It is a v1 defect, not part of the Events scope.
@@ -14,7 +14,7 @@ import type { EmailAdapter, SendEmailOptions } from 'payload';
  * WHY NOT @payloadcms/email-resend
  * It would work, but the Resend REST surface we need is a single POST. Writing
  * it here keeps the Worker bundle free of another transitive tree, keeps this
- * adapter readable, and — practically — avoids adding a dependency to a repo
+ * adapter readable, and - practically - avoids adding a dependency to a repo
  * whose lockfile is pnpm on a machine without pnpm.
  *
  * WHY PER-PROJECT
@@ -62,10 +62,10 @@ export const resendAdapter: EmailAdapter<{ id?: string; skipped?: boolean }> = (
       const apiKey = process.env.RESEND_API_KEY;
 
       // Absent key must not throw. A dev environment without mail configured
-      // should still be able to create users and submit forms — losing the
+      // should still be able to create users and submit forms - losing the
       // email is annoying, losing the record is data loss.
       if (!apiKey) {
-        payload.logger.warn('[email] RESEND_API_KEY unset — email not sent');
+        payload.logger.warn('[email] RESEND_API_KEY unset - email not sent');
         return { skipped: true };
       }
 

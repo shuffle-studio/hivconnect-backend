@@ -1,11 +1,11 @@
-# Events v2 — parked scaffold
+# Events v2 - parked scaffold
 
 **Not compiled.** `docs` is in `tsconfig.json`'s `exclude` list. These files are
 reference material for the v2 SOW, not part of the build.
 
 ## Why they are here and not in `src/`
 
-`tsconfig.json` uses `"include": ["**/*.ts"]` — the whole repo, not just `src/`.
+`tsconfig.json` uses `"include": ["**/*.ts"]` - the whole repo, not just `src/`.
 `next build` runs "Linting and checking validity of types" across everything it
 includes, so an unimported file still has to compile. Dropping these into `src/`
 broke the Cloudflare deploy on 2026-08-25 with:
@@ -16,18 +16,18 @@ broke the Cloudflare deploy on 2026-08-25 with:
 That error is correct and expected: `EventRegistrations.ts` reads
 `event.registration`, a field group that only exists once
 `eventRegistrationFields` is spread into `Events.ts` and `payload generate:types`
-is re-run. The fix was not to add the field — that would put unsold RSVP and
-recurrence UI in the client's CMS — but to take the file out of the build.
+is re-run. The fix was not to add the field - that would put unsold RSVP and
+recurrence UI in the client's CMS - but to take the file out of the build.
 
 **Anything added to `src/` must compile, wired or not.** Remember this before
 scaffolding into this repo again.
 
 ## Wiring order, when v2 is sold
 
-1. `cp fields/*.ts src/fields/` — spread `eventRecurrenceFields` and
+1. `cp fields/*.ts src/fields/` - spread `eventRecurrenceFields` and
    `eventRegistrationFields` into `Events.ts` `fields`; add `syncRRuleHook` to
    `Events.hooks.beforeChange`.
-2. `pnpm payload generate:types` — regenerates `Event` with `recurrence` and
+2. `pnpm payload generate:types` - regenerates `Event` with `recurrence` and
    `registration`. Do this BEFORE moving `EventRegistrations.ts` back.
 3. `cp EventRegistrations.ts src/collections/` and register it in
    `payload.config.ts` `collections`.
@@ -35,7 +35,7 @@ scaffolding into this repo again.
    `eventsCalendarFeed.ts src/endpoints/`; set
    `Events.endpoints = eventCalendarEndpoints`.
 5. `pnpm payload migrate:create` and commit the migration.
-6. Typecheck with the repo's real config — `pnpm exec tsc --noEmit` — not a
+6. Typecheck with the repo's real config - `pnpm exec tsc --noEmit` - not a
    targeted file list. A targeted run is what missed this the first time.
 
 No `generate:importmap` step is needed: none of these add a custom admin React

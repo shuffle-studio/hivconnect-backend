@@ -1,5 +1,5 @@
 /**
- * EV2-02 — iCalendar (RFC 5545) generation.
+ * EV2-02 - iCalendar (RFC 5545) generation.
  *
  * Change Order #1 deferred "Advanced calendar integrations (Google Calendar,
  * iCal)" to 2026. This is that.
@@ -32,7 +32,7 @@ export interface IcsEvent {
 
 const PRODID = '-//HIV Connect Central NJ//Events//EN';
 
-/** RFC 5545 §3.3.5 — UTC form. */
+/** RFC 5545 §3.3.5 - UTC form. */
 export function toIcsUtc(value: string | Date): string {
   const d = value instanceof Date ? value : new Date(value);
   const pad = (n: number) => String(n).padStart(2, '0');
@@ -42,7 +42,7 @@ export function toIcsUtc(value: string | Date): string {
   );
 }
 
-/** RFC 5545 §3.3.11 — escape TEXT values. Order matters: backslash first. */
+/** RFC 5545 §3.3.11 - escape TEXT values. Order matters: backslash first. */
 export function escapeIcsText(value: string): string {
   return String(value)
     .replace(/\\/g, '\\\\')
@@ -52,7 +52,7 @@ export function escapeIcsText(value: string): string {
 }
 
 /**
- * RFC 5545 §3.1 — fold at 75 octets. Google Calendar and Outlook both reject
+ * RFC 5545 §3.1 - fold at 75 octets. Google Calendar and Outlook both reject
  * or silently truncate long unfolded lines, which is the usual reason a feed
  * "works in Apple Calendar but not Google".
  */
@@ -141,7 +141,7 @@ export function buildCalendar(events: IcsEvent[], calendarName = 'HIV Connect Ce
 }
 
 /**
- * "Add to Google Calendar" URL. Single occurrence only — Google's template URL
+ * "Add to Google Calendar" URL. Single occurrence only - Google's template URL
  * has no recurrence parameter, which is why subscribing to the .ics feed is the
  * better path for the Planning Council's standing meetings.
  */

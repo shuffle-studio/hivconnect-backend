@@ -1,7 +1,7 @@
 import type { Field } from 'payload';
 
 /**
- * EV2-04 — per-event registration settings. Spread into Events.ts `fields`.
+ * EV2-04 - per-event registration settings. Spread into Events.ts `fields`.
  *
  * Kept separate from the Events collection file so the LEAD-owned collection
  * takes a one-line change rather than a 120-line diff.
