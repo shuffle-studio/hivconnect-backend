@@ -25,6 +25,7 @@ import { Committees } from './collections/Committees'
 import { Events } from './collections/Events'
 import { Bylaws } from './collections/Bylaws'
 import { ServiceStandards } from './collections/ServiceStandards'
+import { resendAdapter } from './lib/email'
 import { SiteSettings } from './globals/SiteSettings'
 
 const filename = fileURLToPath(import.meta.url)
@@ -51,6 +52,9 @@ export default buildConfig({
   collections: [Users, Providers, Resources, Blog, PDFLibrary, Tags, FAQs, Pages, MembershipApplications, MembershipShareLog, ContactSubmissions, ServiceProviderOptions, Committees, Events, Bylaws, ServiceStandards, Media],
   globals: [SiteSettings],
   editor: lexicalEditor(),
+  // Without this, payload.sendEmail() is a no-op: admin password resets and
+  // user verification silently never send. See src/lib/email.ts.
+  email: resendAdapter,
   secret: process.env.PAYLOAD_SECRET || '',
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL || 'http://localhost:3000',
   graphQL: {
