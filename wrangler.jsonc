@@ -18,6 +18,13 @@
     // Required for PayloadCMS v3 with Next.js 15
     "enable_weak_ref",
   ],
+  // Workers-native logs and metrics. Off until now, which is why a runtime
+  // failure could only be seen by reproducing it.
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+  },
+
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS",
@@ -61,5 +68,63 @@
     // PAYLOAD_SECRET and TURNSTILE_SECRET_KEY are intentionally NOT declared here.
     // They are encrypted secrets, managed via: wrangler secret put <NAME>
     // Declaring a secret as a plain var causes every deploy to overwrite it.
+  },
+
+  /*
+   * Staging.
+   *
+   * hivconnect-db-staging and hivconnect-media-staging were provisioned on
+   * 2025-12-02, in the same minute as the production pair, and then never
+   * bound to anything. This connects them.
+   *
+   * Wrangler does NOT inherit vars, d1_databases or r2_buckets into a named
+   * environment, so every one of them is repeated below on purpose. Deleting a
+   * line here does not fall back to the production value, it removes the
+   * binding. compatibility_date, compatibility_flags, main and observability
+   * DO inherit, which is why they are not repeated.
+   *
+   * Deploy with:  pnpm exec wrangler deploy --env staging
+   * Secrets are per-environment and must be set separately:
+   *   wrangler secret put PAYLOAD_SECRET --env staging
+   *   wrangler secret put TURNSTILE_SECRET_KEY --env staging
+   *   wrangler secret put RESEND_API_KEY --env staging
+   */
+  "env": {
+    "staging": {
+      "name": "hivconnect-backend-staging",
+
+      // workers.dev rather than a custom domain. A route on the production
+      // zone would put staging in front of real visitors.
+      "workers_dev": true,
+
+      "assets": {
+        "directory": ".open-next/assets",
+        "binding": "ASSETS",
+      },
+
+      "d1_databases": [
+        {
+          "binding": "D1",
+          "database_id": "fc9ab010-f7bc-4dc2-8030-1438bb49a8cc",
+          "database_name": "hivconnect-db-staging",
+          "remote": true,
+        },
+      ],
+
+      "r2_buckets": [
+        {
+          "binding": "R2",
+          "bucket_name": "hivconnect-media-staging",
+        },
+      ],
+
+      "vars": {
+        "PAYLOAD_PUBLIC_SERVER_URL": "https://hivconnect-backend-staging.shuffle-seo.workers.dev",
+
+        // Deliberately empty. Sharing the production deploy hook would mean a
+        // content edit in staging rebuilds and republishes the LIVE website.
+        "DEPLOY_HOOK_URL": "",
+      },
+    },
   }
 }

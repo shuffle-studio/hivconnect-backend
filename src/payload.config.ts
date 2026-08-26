@@ -48,6 +48,11 @@ export default buildConfig({
     meta: {
       titleSuffix: '- HIV Connect Central NJ',
     },
+    components: {
+      // Editor guide on the dashboard. This is the SOW "Documentation"
+      // deliverable: it belongs where the editor already is, not in docs/.
+      beforeDashboard: ['/components/admin/EditorGuide#default'],
+    },
   },
   collections: [Users, Providers, Resources, Blog, PDFLibrary, Tags, FAQs, Pages, MembershipApplications, MembershipShareLog, ContactSubmissions, ServiceProviderOptions, Committees, Events, Bylaws, ServiceStandards, Media],
   globals: [SiteSettings],

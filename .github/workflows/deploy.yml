@@ -28,9 +28,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Blocking on purpose. This previously ran with continue-on-error: true,
+      # so a failed migration still shipped the app: the Worker would come up
+      # expecting a schema that was never applied, and the only signal was a
+      # warning line in the job summary. A stopped deploy is a much cheaper
+      # failure than a live app talking to the wrong schema.
       - name: Run database migrations
         id: migrate
-        continue-on-error: true
         run: pnpm run deploy:database
         env:
           CLOUDFLARE_ENV: ''
@@ -48,10 +52,6 @@ jobs:
 
       - name: Deployment summary
         run: |
-          if [ "${{ steps.migrate.outcome }}" = "failure" ]; then
-            echo "⚠️  Database migrations failed (non-blocking) — check logs"
-          else
-            echo "✅ Database migrations completed"
-          fi
-          echo "✅ Backend deployed successfully to Cloudflare Workers"
-          echo "🔗 URL: https://hivconnect-backend.shufflestudio.workers.dev"
+          echo "Database migrations applied"
+          echo "Backend deployed to Cloudflare Workers"
+          echo "URL: https://login.hivconnectcentralnj.com"
