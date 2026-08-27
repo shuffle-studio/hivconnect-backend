@@ -97,6 +97,17 @@
       // zone would put staging in front of real visitors.
       "workers_dev": true,
 
+      // MUST stay empty. `routes` IS inherited into named environments, so
+      // without this staging inherits login.hivconnectcentralnj.com and
+      // wrangler prompts to repoint the production domain at staging mid-deploy.
+      // Answering yes there would put the staging database behind the live
+      // admin and the public API.
+      "routes": [],
+
+      // Not inherited; mirrored only to silence wrangler's warning. The
+      // top-level array is empty too.
+      "services": [],
+
       "assets": {
         "directory": ".open-next/assets",
         "binding": "ASSETS",
@@ -119,7 +130,7 @@
       ],
 
       "vars": {
-        "PAYLOAD_PUBLIC_SERVER_URL": "https://hivconnect-backend-staging.shuffle-seo.workers.dev",
+        "PAYLOAD_PUBLIC_SERVER_URL": "https://hivconnect-backend-staging.shufflestudio.workers.dev",
 
         // Deliberately empty. Sharing the production deploy hook would mean a
         // content edit in staging rebuilds and republishes the LIVE website.
